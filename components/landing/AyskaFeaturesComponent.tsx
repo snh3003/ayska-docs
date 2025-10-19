@@ -1,5 +1,6 @@
 import { Box, Text } from '@primer/react'
 import { CodeIcon, CheckCircleIcon, PaintbrushIcon, BeakerIcon } from '@primer/octicons-react'
+import { THEME_CONSTANTS, COMMON_STYLES, THEME_COLORS } from '@/lib/theme'
 
 const features = [
   {
@@ -26,56 +27,34 @@ const features = [
 
 export function AyskaFeatures() {
   return (
-    <Box
-      sx={{
-        padding: [4, 6, 8],
-        backgroundColor: 'canvas.default',
-      }}
-    >
-      <Box
-        sx={{
-          maxWidth: '1200px',
-          mx: 'auto',
-        }}
-      >
+        <Box
+          sx={{
+            padding: [4, 6, 8],
+            backgroundColor: 'canvas.inset', // Proper theme token
+          }}
+        >
+      <Box sx={COMMON_STYLES.container}>
         <Box
           as="h2"
           sx={{
-            fontSize: [4, 5],
+            ...THEME_CONSTANTS.typography.heading.h2,
             textAlign: 'center',
             marginBottom: 6,
             color: 'fg.default',
-            fontWeight: 'bold',
           }}
         >
           Why Choose Ayska?
         </Box>
         
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: ['1fr', 'repeat(2, 1fr)', 'repeat(2, 1fr)'],
-            gap: [4, 5],
-          }}
-        >
+        <Box sx={COMMON_STYLES.responsiveGrid}>
           {features.map((feature, index) => {
             const IconComponent = feature.icon
             return (
               <Box
                 key={index}
                 sx={{
-                  padding: 4,
-                  border: '1px solid',
-                  borderColor: 'border.default',
-                  borderRadius: 3,
-                  backgroundColor: 'canvas.subtle',
+                  ...COMMON_STYLES.card,
                   textAlign: 'center',
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    borderColor: 'accent.emphasis',
-                    transform: 'translateY(-2px)',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                  },
                 }}
               >
                 <Box
@@ -93,10 +72,8 @@ export function AyskaFeatures() {
                 <Box
                   as="h3"
                   sx={{
-                    fontSize: 3,
-                    marginBottom: 2,
+                    ...THEME_CONSTANTS.typography.heading.h3,
                     color: 'fg.default',
-                    fontWeight: 'bold',
                   }}
                 >
                   {feature.title}
@@ -104,9 +81,7 @@ export function AyskaFeatures() {
                 
                 <Text
                   sx={{
-                    fontSize: 2,
-                    color: 'fg.muted',
-                    lineHeight: 1.6,
+                    ...THEME_CONSTANTS.typography.text.muted,
                   }}
                 >
                   {feature.description}

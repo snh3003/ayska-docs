@@ -13,7 +13,7 @@ export function extractTOC(markdown: string): TOCItem[] {
   while ((match = headingRegex.exec(markdown)) !== null) {
     const level = match[0].split('#').length - 1
     const text = match[1]
-    const id = text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
+    const id = generateHeadingId(text)
     
     headings.push({ level, text, id })
   }
@@ -51,4 +51,33 @@ function buildHierarchy(headings: TOCItem[]): TOCItem[] {
 
 export function generateHeadingId(text: string): string {
   return text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
+}
+
+/**
+ * URL Hash Management Functions
+ */
+export function updateHash(id: string): void {
+  if (typeof window !== 'undefined') {
+    const newUrl = `${window.location.pathname}${window.location.search}#${id}`
+    window.history.replaceState(null, '', newUrl)
+  }
+}
+
+export function getHashFromUrl(): string {
+  if (typeof window !== 'undefined') {
+    return window.location.hash.slice(1)
+  }
+  return ''
+}
+
+export function scrollToHeading(id: string): void {
+  if (typeof window !== 'undefined') {
+    const element = document.getElementById(id)
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }
+  }
 }

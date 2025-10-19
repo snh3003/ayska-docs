@@ -1,0 +1,88 @@
+# Ayska Documentation Website - Cursor Rules
+
+## Critical Testing Requirements
+
+1. **ALWAYS test visual output after making UI changes**
+   - Open the dev server and visually inspect every component
+   - Test in both light AND dark modes
+   - Verify button text is visible in both themes
+
+2. **NEVER assume theme tokens work without verification**
+   - Primer's sx prop doesn't interpolate theme tokens in CSS functions
+   - Use resolvedColorMode instead of colorMode for theme-dependent logic
+   - Test gradient backgrounds and complex styling
+
+3. **ALWAYS test interactive elements**
+   - Test theme toggle works on first click
+   - Test button hover states
+   - Test navigation functionality
+
+4. **ALWAYS measure performance**
+   - Check bundle sizes after changes
+   - Test page load times
+   - Use dynamic imports for heavy components
+
+5. **ALWAYS verify responsive design**
+   - Test on mobile (< 768px)
+   - Test on tablet (768-1024px) 
+   - Test on desktop (> 1024px)
+
+## Code Quality Rules
+
+1. **Use resolvedColorMode instead of colorMode**
+   - resolvedColorMode is more reliable for theme detection
+   - Prevents double-click issues with theme toggle
+
+2. **Lazy load heavy dependencies**
+   - Use dynamic imports for react-syntax-highlighter
+   - Use dynamic imports for large components
+   - Disable SSR for client-only components
+
+3. **Optimize fonts and assets**
+   - Use Next.js font optimization
+   - Add preconnect hints for external resources
+   - Enable compression in next.config.ts
+
+4. **Test hydration consistency**
+   - Ensure styled-components SSR works properly
+   - Use suppressHydrationWarning only when necessary
+   - Test with and without JavaScript enabled
+
+## Performance Targets
+
+- Home page: < 120 kB
+- Docs page: < 200 kB  
+- First Contentful Paint: < 1.5s
+- Time to Interactive: < 3.5s
+
+## Common Mistakes to Avoid
+
+1. **Don't use string literals in CSS functions**
+   - ❌ `background: 'linear-gradient(135deg, canvas.subtle 0%, canvas.inset 100%)'`
+   - ✅ Use actual color values or theme callback functions
+
+2. **Don't assume button text is visible**
+   - ❌ `color: 'accent.fg'` (invisible in light mode)
+   - ✅ `color: 'fg.onEmphasis'` (white text on blue background)
+
+3. **Don't forget to test theme toggle**
+   - Must work on first click
+   - Must show correct icon for current mode
+   - Must persist state across page reloads
+
+4. **Don't ignore bundle sizes**
+   - Lazy load syntax highlighter (~240 kB saved)
+   - Use dynamic imports for heavy components
+   - Remove unused dependencies
+
+## Testing Checklist
+
+Before committing any UI changes:
+- [ ] Visual test in light mode
+- [ ] Visual test in dark mode  
+- [ ] Test theme toggle interaction
+- [ ] Test button text visibility
+- [ ] Test responsive breakpoints
+- [ ] Check bundle size impact
+- [ ] Verify no console errors
+- [ ] Test page load performance

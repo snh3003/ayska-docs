@@ -1,10 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, IconButton, Label, useTheme } from '@primer/react'
 import { CopyIcon, CheckIcon } from '@primer/octicons-react'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { oneLight, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import dynamic from 'next/dynamic'
+
+// Lazy load the heavy syntax highlighter
+const SyntaxHighlighter = dynamic(
+  () => import('react-syntax-highlighter').then(mod => mod.Prism),
+  { 
+    loading: () => <Box sx={{ padding: 3, backgroundColor: 'canvas.subtle' }}>Loading...</Box>,
+    ssr: false // Disable SSR for this component
+  }
+)
 
 interface AyskaCodeBlockProps {
   children: string
@@ -12,9 +20,25 @@ interface AyskaCodeBlockProps {
   className?: string
 }
 
+// Lazy load themes
+const useHighlighterTheme = () => {
+  const { resolvedColorMode } = useTheme()
+  const [theme, setTheme] = useState<any>(null)
+  
+  useEffect(() => {
+    if (resolvedColorMode === 'day') {
+      import('react-syntax-highlighter/dist/esm/styles/prism').then(mod => setTheme(mod.oneLight))
+    } else {
+      import('react-syntax-highlighter/dist/esm/styles/prism').then(mod => setTheme(mod.oneDark))
+    }
+  }, [resolvedColorMode])
+  
+  return theme
+}
+
 export function AyskaCodeBlock({ children, language, className }: AyskaCodeBlockProps) {
   const [copied, setCopied] = useState(false)
-  const { colorMode } = useTheme()
+  const theme = useHighlighterTheme()
   
   const match = /language-(\w+)/.exec(className || '')
   const lang = language || match?.[1] || 'text'
@@ -28,8 +52,6 @@ export function AyskaCodeBlock({ children, language, className }: AyskaCodeBlock
       console.error('Failed to copy text: ', err)
     }
   }
-  
-  const theme = colorMode === 'day' ? oneLight : oneDark
   
   return (
     <Box

@@ -2,6 +2,7 @@
 
 import { SideNav, Box, Text } from '@primer/react'
 import { usePathname } from 'next/navigation'
+import { THEME_CONSTANTS, COMMON_STYLES } from '@/lib/theme'
 
 const docStructure = [
   {
@@ -39,11 +40,11 @@ export function AyskaSidebar() {
     <SideNav
       sx={{
         width: '100%',
-        maxWidth: '280px',
-        padding: 3,
-        backgroundColor: 'canvas.subtle',
+        maxWidth: THEME_CONSTANTS.sidebar.width,
+        padding: THEME_CONSTANTS.sidebar.padding,
+        backgroundColor: THEME_CONSTANTS.sidebar.backgroundColor,
         borderRight: '1px solid',
-        borderRightColor: 'border.default',
+        borderRightColor: THEME_CONSTANTS.sidebar.borderColor,
         minHeight: '100vh',
       }}
     >
@@ -51,9 +52,9 @@ export function AyskaSidebar() {
         href="/docs"
         sx={{
           fontWeight: 'bold',
-          fontSize: 2,
+          fontSize: THEME_CONSTANTS.navigation.fontSize,
           marginBottom: 2,
-          color: pathname === '/docs' ? 'accent.fg' : 'fg.default',
+          color: pathname === '/docs' ? THEME_CONSTANTS.navigation.activeColor : 'fg.default',
         }}
       >
         Documentation
@@ -63,7 +64,7 @@ export function AyskaSidebar() {
         <Box key={section.title} sx={{ marginBottom: 3 }}>
           <Text
             sx={{
-              fontSize: 2,
+              fontSize: THEME_CONSTANTS.navigation.fontSize,
               fontWeight: 'bold',
               color: 'fg.muted',
               marginBottom: 2,
@@ -77,10 +78,10 @@ export function AyskaSidebar() {
               key={item.slug}
               href={`/docs/${item.slug}`}
               sx={{
-                color: pathname === `/docs/${item.slug}` ? 'accent.fg' : 'fg.default',
+                color: pathname === `/docs/${item.slug}` ? THEME_CONSTANTS.navigation.activeColor : 'fg.default',
                 fontWeight: pathname === `/docs/${item.slug}` ? 'bold' : 'normal',
                 '&:hover': {
-                  color: 'accent.fg',
+                  color: THEME_CONSTANTS.navigation.hoverColor,
                   backgroundColor: 'canvas.default',
                 },
               }}

@@ -3,8 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: 'export',
   basePath: process.env.NODE_ENV === 'production' ? '/ayska-docs' : '',
+  compress: true, // Enable gzip compression
   images: {
     unoptimized: true,
+    formats: ['image/webp', 'image/avif'],
   },
   compiler: {
     styledComponents: {

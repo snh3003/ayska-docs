@@ -1,11 +1,20 @@
-import { Box, Text, Button, Link } from '@primer/react'
+'use client'
+
+import { Box, Text, Link, useTheme } from '@primer/react'
+import { THEME_CONSTANTS, COMMON_STYLES } from '@/lib/theme'
 
 export function AyskaCTA() {
+  const { resolvedColorMode } = useTheme()
+  
+  const backgroundColor = resolvedColorMode === 'day'
+    ? '#ddf4ff'  // Light blue in light mode
+    : '#0d1117'  // Dark background in dark mode
+
   return (
     <Box
       sx={{
         padding: [4, 6, 8],
-        backgroundColor: 'accent.subtle',
+        backgroundColor: backgroundColor,
         textAlign: 'center',
       }}
     >
@@ -18,10 +27,9 @@ export function AyskaCTA() {
         <Box
           as="h2"
           sx={{
-            fontSize: [4, 5],
+            ...THEME_CONSTANTS.typography.heading.h2,
             marginBottom: 3,
             color: 'fg.default',
-            fontWeight: 'bold',
           }}
         >
           Ready to Explore?
@@ -29,10 +37,9 @@ export function AyskaCTA() {
         
         <Text
           sx={{
+            ...THEME_CONSTANTS.typography.text.muted,
             fontSize: [2, 3],
-            color: 'fg.muted',
             marginBottom: 5,
-            lineHeight: 1.6,
           }}
         >
           Dive into our comprehensive documentation and start building with Ayska today.
@@ -40,8 +47,7 @@ export function AyskaCTA() {
         
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: ['column', 'row'],
+            ...COMMON_STYLES.responsiveDisplay,
             gap: 3,
             justifyContent: 'center',
             alignItems: 'center',
@@ -50,20 +56,8 @@ export function AyskaCTA() {
           <Link
             href="/docs"
             sx={{
+              ...COMMON_STYLES.primaryButton,
               display: 'inline-block',
-              padding: '12px 24px',
-              backgroundColor: 'accent.emphasis',
-              color: 'accent.fg',
-              textDecoration: 'none',
-              borderRadius: 2,
-              fontWeight: 'bold',
-              minWidth: ['200px', '180px'],
-              minHeight: '44px',
-              textAlign: 'center',
-              '&:hover': {
-                backgroundColor: 'accent.fg',
-                color: 'accent.subtle',
-              },
             }}
           >
             Get Started

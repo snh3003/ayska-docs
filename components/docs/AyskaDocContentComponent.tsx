@@ -1,3 +1,4 @@
+import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeSlug from 'rehype-slug'
@@ -40,11 +41,36 @@ const components = {
       {children}
     </Heading>
   ),
-  p: ({ children, ...props }: any) => (
-    <Text as="p" sx={{ marginBottom: 3, lineHeight: 1.6 }} {...props}>
-      {children}
-    </Text>
-  ),
+  p: ({ children, ...props }: any) => {
+    // Check if any child is a block-level element (like AyskaCodeBlock)
+    const hasBlockChild = React.Children.toArray(children).some(child =>
+      React.isValidElement(child) && (child.type === AyskaCodeBlock || child.type === 'div' || child.type === 'pre')
+    );
+
+    if (hasBlockChild) {
+      return <Box sx={{ marginBottom: 3, lineHeight: 1.6 }} {...props}>{children}</Box>;
+    }
+    return (
+      <Text as="p" sx={{ marginBottom: 3, lineHeight: 1.6, color: 'fg.default' }} {...props}>
+        {children}
+      </Text>
+    );
+  },
+  pre: ({ children, ...props }: any) => {
+    // Handle fenced code blocks
+    const codeElement = children[0];
+    if (codeElement && typeof codeElement === 'object' && 'props' in codeElement) {
+      const { className, children: codeChildren } = codeElement.props;
+      const match = /language-(\w+)/.exec(className || '');
+      const language = match?.[1] || 'text';
+      return (
+        <AyskaCodeBlock language={language} {...props}>
+          {String(codeChildren).replace(/\n$/, '')}
+        </AyskaCodeBlock>
+      );
+    }
+    return <Box as="pre" sx={{ marginBottom: 3 }} {...props}>{children}</Box>;
+  },
   a: ({ href, children, ...props }: any) => (
     <Link href={href} sx={{ color: 'accent.fg' }} {...props}>
       {children}
@@ -61,6 +87,7 @@ const components = {
             borderRadius: 1,
             fontSize: '0.9em',
             fontFamily: 'mono',
+            color: 'fg.default',
           }}
           {...props}
         >
@@ -68,9 +95,11 @@ const components = {
         </Text>
       )
     }
+    // This case should ideally not be reached for block code if 'pre' is defined.
+    // As a fallback, render it as a simple code block.
     return (
-      <AyskaCodeBlock className={className} {...props}>
-        {children}
+      <AyskaCodeBlock language="text" {...props}>
+        {String(children).replace(/\n$/, '')}
       </AyskaCodeBlock>
     )
   },
@@ -90,7 +119,7 @@ const components = {
     </Box>
   ),
   li: ({ children, ...props }: any) => (
-    <Text as="li" sx={{ marginBottom: 1, lineHeight: 1.6 }} {...props}>
+    <Text as="li" sx={{ marginBottom: 1, lineHeight: 1.6, color: 'fg.default' }} {...props}>
       {children}
     </Text>
   ),
@@ -135,6 +164,7 @@ const components = {
         fontWeight: 'bold',
         borderRight: '1px solid',
         borderRightColor: 'border.default',
+        color: 'fg.default',
       }}
       {...props}
     >
@@ -148,6 +178,7 @@ const components = {
         padding: 3,
         borderRight: '1px solid',
         borderRightColor: 'border.default',
+        color: 'fg.default',
       }}
       {...props}
     >
